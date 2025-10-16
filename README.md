@@ -1,4 +1,4 @@
-# Konbi — Diego Works
+# Konbi. Diego Works
 
 **Konbi** is a lightweight web landing page built with [Vite](https://vite.dev) and [Tailwind CSS](https://tailwindcss.com), designed to introduce upcoming tools and projects by Diego González.
 
