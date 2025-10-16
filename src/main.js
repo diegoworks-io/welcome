@@ -1,24 +1,18 @@
 import './style.css'
-import javascriptLogo from './javascript.svg'
-import viteLogo from '/vite.svg'
-import { setupCounter } from './counter.js'
 
 document.querySelector('#app').innerHTML = `
-  <div>
-    <a href="https://vite.dev" target="_blank">
-      <img src="${viteLogo}" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank">
-      <img src="${javascriptLogo}" class="logo vanilla" alt="JavaScript logo" />
-    </a>
-    <h1>Hello Vite!</h1>
-    <div class="card">
-      <button id="counter" type="button"></button>
+  <main class="min-h-screen flex items-center justify-center bg-black text-white font-sans p-10">
+    <div class="text-center rounded-2xl bg-neutral-900 p-12 shadow-xl max-w-xl">
+      <img src="/konbi logo white.png" alt="Konbi Logo" class="w-36 h-auto mx-auto mb-5" />
+      <h1 class="text-3xl font-semibold mb-2">Konbi - Diego Works</h1>
+      <p class="opacity-90">Under construction. Coming soon.</p>
+      <a href="mailto:diego@diegoworks.io"
+         class="inline-block mt-6 px-5 py-2 rounded-full bg-white text-black font-semibold">
+         Contact
+      </a>
+      <p class="mt-4 text-xs opacity-60">
+        © ${new Date().getFullYear()} Diego González
+      </p>
     </div>
-    <p class="read-the-docs">
-      Click on the Vite logo to learn more
-    </p>
-  </div>
+  </main>
 `
-
-setupCounter(document.querySelector('#counter'))
