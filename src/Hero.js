@@ -1,6 +1,10 @@
 export function Hero() {
   return `
-    <section class="flex flex-col items-center justify-center min-h-screen bg-black text-white font-sans px-4">
+    <section class="relative flex flex-col items-center justify-center min-h-screen bg-black text-white font-sans px-4">
+      <a href="https://forms.gle/cPzy7jQYL2xzGf6R7" target="_blank" rel="noopener noreferrer"
+         class="absolute top-6 right-6 sm:top-8 sm:right-8 px-6 py-3 text-base sm:text-lg font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white shadow-lg backdrop-blur border border-white/20 transition-all duration-200 z-10">
+        Let’s talk about your project
+      </a>
       <img src="/konbi logo white.png"
            alt="Konbi Logo"
            class="w-20 sm:w-24 md:w-32 lg:w-40 h-auto mb-4 sm:mb-6 md:mb-8 lg:mb-10" />
@@ -10,7 +14,6 @@ export function Hero() {
       <p class="text-base sm:text-lg md:text-xl opacity-80 mb-6 sm:mb-8 md:mb-10 text-center max-w-xs sm:max-w-md md:max-w-xl lg:max-w-2xl mx-auto leading-relaxed">
         Lightweight tools that replace chaos<br class="sm:hidden" /> with simple,<br class="hidden sm:inline" /> reliable workflows
       </p>
-      <!-- CTA space for future -->
     </section>
   `;
 }
