@@ -1,6 +1,6 @@
 export function Hero() {
   return `
-    <section class="relative flex flex-col items-center justify-center min-h-screen bg-black text-white font-sans px-4">
+    <section class="relative flex flex-col items-center justify-start min-h-[60vh] bg-black text-white font-sans px-4 pt-8">
       <a href="https://forms.gle/cPzy7jQYL2xzGf6R7" target="_blank" rel="noopener noreferrer"
          class="fixed top-4 right-4 px-6 py-3 text-base sm:text-lg font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white shadow-lg backdrop-blur border border-white/20 transition-all duration-200 z-50">
         Let’s talk about your project

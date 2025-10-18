@@ -1,8 +1,9 @@
 import './style.css'
 import { Hero } from './Hero.js';
+import { Services } from './Services.js';
 import { Footer } from './Footer.js';
 
-document.querySelector('#app').innerHTML = Hero() + Footer();
+document.querySelector('#app').innerHTML = Hero() + Services() + Footer();
 
 // Privacy modal logic
 window.addEventListener('DOMContentLoaded', () => {
