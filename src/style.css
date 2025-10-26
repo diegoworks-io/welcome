@@ -9,8 +9,42 @@
 }
 
 #hero-section {
-	background-color: hsl(0 0% var(--bg-lightness));
-	color: hsl(0 0% var(--text-lightness));
-	/* no CSS transition here; animation is driven by JS */
+	/* Force a static black background and white text as requested */
+	background-color: #000;
+	color: #fff;
 	transition: none;
+}
+
+/* Small transitions for micro-smoothing of final states */
+#hero-section #hero-logo,
+#hero-section #hero-title,
+#hero-section #hero-subtitle {
+	transition: transform 120ms cubic-bezier(.2,.9,.2,1), opacity 120ms ease;
+}
+
+/* Responsive fixes: clamp header lines between 768px and 882px to two lines */
+@media (min-width: 768px) and (max-width: 882px) {
+	#hero-title {
+			display: -webkit-box;
+			-webkit-box-orient: vertical;
+			-webkit-line-clamp: 2;
+			line-clamp: 2;
+			overflow: hidden;
+			font-size: 1.9rem; /* slightly reduce so it fits two lines */
+		line-height: 1.05;
+	}
+	#hero-logo { top: 30% !important; }
+}
+
+/* At slightly larger widths, give the logo more vertical space from the title */
+@media (min-width: 883px) and (max-width: 1200px) {
+	#hero-logo { top: 30% !important; }
+	#hero-title { top: 62% !important; }
+}
+
+/* Ensure on very small widths everything stacks reasonably */
+@media (max-width: 639px) {
+	#hero-logo { top: 34% !important; }
+	#hero-title { top: 60% !important; }
+	#hero-subtitle { top: 70% !important; }
 }
