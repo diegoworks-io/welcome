@@ -68,23 +68,19 @@
     const e = easeOutCubic(p);
 
     if (logo && startLogo && endLogo) {
-      const dx = endLogo.x - startLogo.x;
+      // Move logo vertically only (no horizontal translation) so it disappears upward
       const dy = endLogo.y - startLogo.y;
-      const tx = dx * p;
-      let ty = dy * p;
-      // smoothly nudge final position down up to 4px as p -> 1 (tiny visual micro-adjust)
-      const extra = 4 * e;
-      ty += extra;
-      // use tokenized scale amounts rather than magic constants
+      const tx = 0; // force no horizontal motion
+      const ty = dy * p; // if end is above start, dy is negative => moves up
       const s = 1 - LOGO_SCALE_TOKEN * p;
       logo.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
       logo.style.transformOrigin = 'center center';
     }
 
     if (title && startTitle && endTitle) {
-      const dx = endTitle.x - startTitle.x;
+      // Move title vertically only (no horizontal translation)
       const dy = endTitle.y - startTitle.y;
-      const tx = dx * p;
+      const tx = 0;
       const ty = dy * p;
       const s = 1 - TITLE_SCALE_TOKEN * p;
       title.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
