@@ -19,7 +19,9 @@
 #hero-section #hero-logo,
 #hero-section #hero-title,
 #hero-section #hero-subtitle {
-	transition: transform 120ms cubic-bezier(.2,.9,.2,1), opacity 120ms ease;
+	/* Only transition opacity here. Transform is driven by JS (requestAnimationFrame) —
+	   having a CSS transform transition fights the per-frame transforms and creates jitter. */
+	transition: opacity 120ms ease;
 }
 
 /* Responsive fixes: clamp header lines between 768px and 882px to two lines */
@@ -47,4 +49,12 @@
 	#hero-logo { top: 34% !important; }
 	#hero-title { top: 60% !important; }
 	#hero-subtitle { top: 70% !important; }
+}
+
+/* Reduce hero title size on very large screens (1440px+) to avoid unwanted wrapping */
+@media (min-width: 1400px) {
+	#hero-title {
+		font-size: 3rem !important; /* smaller max for large viewports */
+		line-height: 1.02;
+	}
 }

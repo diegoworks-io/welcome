@@ -1,9 +1,10 @@
 import './style.css'
 import { Hero } from './Hero.js';
 import { Footer } from './Footer.js';
-import './heroScroll.js';
-
 document.querySelector('#app').innerHTML = Hero() + Footer();
+
+// Start the lightweight hero animator after mounting the DOM so it can find elements
+import('./heroAnimator.js');
 
 // Animation-ready DOM references for hero (query immediately after mount)
 const hero = document.getElementById('hero-section');
