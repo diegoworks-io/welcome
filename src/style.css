@@ -1,3 +1,116 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Hero tokens (used by heroAnimator.js) — mobile-first defaults */
+:root {
+	--hero-pad: 24;           /* px */
+	--hero-range: 0.12;      /* fraction of viewport to finish anim (shorter -> finishes with less scroll) */
+	--hero-logo-scale: 0.10; /* relative scale reduction (0.10 == 10%) */
+	--hero-title-scale: 0.06;
+	--hero-sub-lift: 20;     /* px */
+}
+
+/* lg overrides (1024px and up) */
+@media (min-width: 1024px) {
+	:root {
+		--hero-pad: 28;
+		--hero-range: 0.16;
+	}
+}
+
+/* Color morph variables for hero (0% = black, 100% = white lightness) */
+:root {
+	--bg-lightness: 0%;
+	--text-lightness: 100%;
+}
+
+#hero-section {
+	/* Force a static black background and white text as requested */
+	background-color: #000;
+	color: #fff;
+	transition: none;
+}
+
+/* Small transitions for micro-smoothing of final states */
+#hero-section #hero-logo,
+#hero-section #hero-title,
+#hero-section #hero-subtitle {
+	/* Only transition opacity here. Transform is driven by JS (requestAnimationFrame) —
+	   having a CSS transform transition fights the per-frame transforms and creates jitter. */
+	transition: opacity 120ms ease;
+}
+
+/* Nav slot visibility: slots start hidden and fade in as scroll progress completes */
+#hero-topbar #slot-logo,
+#hero-topbar #slot-title {
+	opacity: 0;
+	transition: opacity 180ms ease;
+}
+
+/* CTA icon visual tweaks for small screens: ensure touch target and consistent visual */
+.cta-icon {
+	/* visually naked arrow on xs: keep a small invisible hit area for accessibility */
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 8px; /* slightly larger hit area for touch */
+	/* ensure the arrow uses a visible color on dark background */
+	color: #ffffff;
+	opacity: 1;
+}
+
+.cta-icon svg { width: 16px; height: 16px; display: block; }
+
+.cta-icon path {
+	/* force a visible stroke color/weight in case currentColor isn't inherited in some environments */
+	/* non-aggressive fallback: explicitly paint the stroke white so the arrow prints on dark backgrounds */
+	stroke: #ffffff;
+	/* still allow currentColor-based styling in case authors override the color elsewhere */
+	/* stroke: currentColor; */
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+    stroke-opacity: 1;
+}
+
+/* visually-hidden helper (if not present already) */
+.sr-only {
+	position: absolute !important;
+	width: 1px; height: 1px;
+	padding: 0; margin: -1px;
+	overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0;
+}
+
+/* Responsive fixes: clamp header lines between 768px and 882px to two lines */
+@media (min-width: 768px) and (max-width: 882px) {
+	#hero-title {
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		overflow: hidden;
+		line-height: 1.05;
+		/* font-size must be handled via clamp() in markup per policy — removed fixed rem here */
+	}
+	/* Positioning driven by transforms; remove top overrides */
+}
+
+/* At slightly larger widths, give the logo more vertical space from the title */
+@media (min-width: 883px) and (max-width: 1200px) {
+	/* removed top:... overrides; layout is driven by transform/slot centers */
+}
+
+/* Ensure on very small widths everything stacks reasonably */
+@media (max-width: 639px) {
+	/* removed top:... overrides; fine-grained adjustments handled via container/tokenized transforms */
+}
+
+/* Reduce hero title size on very large screens (1440px+) to avoid unwanted wrapping */
+@media (min-width: 1400px) {
+	#hero-title {
+		/* keep typography sizing via clamp() in markup; do not use fixed font-size here */
+		line-height: 1.02;
+	}
+}
