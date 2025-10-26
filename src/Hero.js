@@ -18,9 +18,12 @@ export function Hero() {
               <!-- right slot: CTA inside nav -->
               <div id="slot-cta" class="flex items-center" style="padding-right:var(--hero-pad)">
                 <a id="hero-cta" href="https://forms.gle/cPzy7jQYL2xzGf6R7" target="_blank" rel="noopener noreferrer" aria-label="Contact us"
-                  class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white shadow-sm backdrop-blur border border-white/20 transition-all duration-200">
+                  class="inline-flex items-center text-sm font-semibold transition-all duration-200 px-0 py-0 sm:px-4 sm:py-2 rounded-none sm:rounded-lg bg-transparent sm:bg-white/10 hover:bg-transparent sm:hover:bg-white/20 text-white shadow-none sm:shadow-sm border-transparent sm:border border-white/20">
                   <span class="cta-full hidden sm:inline">Let’s talk about your project</span>
-                  <span class="cta-icon inline-flex sm:hidden items-center justify-center w-8 h-8 rounded-full">?</span>
+                  <!-- replace bulky '?' with a compact right-arrow icon; keep accessible label -->
+                  <!-- Replace SVG with a simple Unicode arrow for guaranteed visibility on small screens -->
+                  <span class="cta-icon inline-flex sm:hidden" aria-hidden="true">&rarr;</span>
+                  <span class="sr-only">Contact us</span>
                 </a>
               </div>
             </div>
