@@ -1,27 +1,37 @@
 export function Hero() {
   return `
-  <section id="hero-wrapper" class="relative h-[110vh]">
+  <section id="hero-wrapper" class="relative min-h-screen sm:h-[240vh] lg:h-[300vh]">
       <div id="hero-section"
-           class="sticky top-0 min-h-screen font-sans px-4">
-      <a id="hero-cta" href="https://forms.gle/cPzy7jQYL2xzGf6R7" target="_blank" rel="noopener noreferrer" aria-label="Contact us"
-        class="fixed top-4 right-4 z-50">
-        <!-- full text CTA visible on small screens and up -->
-        <span class="cta-full hidden sm:inline-flex items-center px-6 py-3 text-base sm:text-lg font-semibold rounded-xl bg-white/10 hover:bg-white/20 text-white shadow-lg backdrop-blur border border-white/20 transition-all duration-200">
-          <!-- Full text only on wide screens (no icon) -->
-          Let’s talk about your project
-        </span>
-
-        <!-- icon-only CTA for extra-small screens -->
-        <span class="cta-icon inline-flex sm:hidden items-center justify-center w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 text-white shadow-lg border border-white/20 transition-all duration-200" aria-hidden="true">
-          <!-- Simple question-mark glyph for constrained space -->
-          <span class="text-lg font-bold" aria-hidden="true" style="line-height:1">?</span>
-        </span>
-      </a>
+           class="sticky top-0 font-sans">
+      <!-- Shared container for guide row and motion canvas (single source of truth) -->
+      <div class="mx-auto max-w-6xl px-4 sm:px-6">
+        <!-- Visible sticky nav bar that also serves as the anchor slots for the final animation positions -->
+        <nav id="hero-topbar" class="w-full sticky top-0 z-50 bg-black bg-opacity-90">
+          <div class="mx-auto max-w-6xl px-4 sm:px-6">
+            <div class="h-14 flex items-center justify-between">
+              <!-- left slot: logo -->
+              <div id="slot-logo" class="flex items-center" style="padding-left:var(--hero-pad)">
+                <img src="/konbi logo white.png" alt="Konbi" class="w-8 h-auto sm:w-10" />
+              </div>
+              <!-- center slot: title (nav-size) -->
+              <div id="slot-title" class="flex-1 text-center text-white font-semibold text-sm sm:text-base">Operational clarity for SMEs</div>
+              <!-- right slot: CTA inside nav -->
+              <div id="slot-cta" class="flex items-center" style="padding-right:var(--hero-pad)">
+                <a id="hero-cta" href="https://forms.gle/cPzy7jQYL2xzGf6R7" target="_blank" rel="noopener noreferrer" aria-label="Contact us"
+                  class="inline-flex items-center px-4 py-2 text-sm font-semibold rounded-lg bg-white/10 hover:bg-white/20 text-white shadow-sm backdrop-blur border border-white/20 transition-all duration-200">
+                  <span class="cta-full hidden sm:inline">Let’s talk about your project</span>
+                  <span class="cta-icon inline-flex sm:hidden items-center justify-center w-8 h-8 rounded-full">?</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </nav>
+        
 
   <!-- Motion canvas: fixed to viewport; children arranged in a centered column for consistent spacing -->
   <div class="fixed inset-0 pointer-events-none z-40 flex items-center justify-center">
   <!-- Motion canvas: distribute logo / title / subtitle vertically and center horizontally -->
-  <div id="hero-motion-canvas" class="pointer-events-auto flex flex-col items-center justify-between h-[48vh] md:h-[56vh] lg:h-[64vh] xl:h-[72vh] py-12 px-4">
+  <div id="hero-motion-canvas" class="pointer-events-auto flex flex-col items-center justify-between sm:h-[48vh] md:h-[56vh] lg:h-[64vh] xl:h-[72vh] py-12 px-4 mx-auto max-w-6xl sm:px-6">
       <img id="hero-logo" src="/konbi logo white.png" alt="Konbi Logo"
            class="w-20 sm:w-24 md:w-32 lg:w-40 h-auto" />
 

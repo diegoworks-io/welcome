@@ -2,6 +2,23 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hero tokens (used by heroAnimator.js) — mobile-first defaults */
+:root {
+	--hero-pad: 24;           /* px */
+	--hero-range: 0.24;      /* fraction of viewport to finish anim */
+	--hero-logo-scale: 0.10; /* relative scale reduction (0.10 == 10%) */
+	--hero-title-scale: 0.06;
+	--hero-sub-lift: 20;     /* px */
+}
+
+/* lg overrides (1024px and up) */
+@media (min-width: 1024px) {
+	:root {
+		--hero-pad: 28;
+		--hero-range: 0.28;
+	}
+}
+
 /* Color morph variables for hero (0% = black, 100% = white lightness) */
 :root {
 	--bg-lightness: 0%;
@@ -24,37 +41,41 @@
 	transition: opacity 120ms ease;
 }
 
+/* Nav slot visibility: slots start hidden and fade in as scroll progress completes */
+#hero-topbar #slot-logo,
+#hero-topbar #slot-title {
+	opacity: 0;
+	transition: opacity 180ms ease;
+}
+
 /* Responsive fixes: clamp header lines between 768px and 882px to two lines */
 @media (min-width: 768px) and (max-width: 882px) {
 	#hero-title {
-			display: -webkit-box;
-			-webkit-box-orient: vertical;
-			-webkit-line-clamp: 2;
-			line-clamp: 2;
-			overflow: hidden;
-			font-size: 1.9rem; /* slightly reduce so it fits two lines */
+		display: -webkit-box;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 2;
+		line-clamp: 2;
+		overflow: hidden;
 		line-height: 1.05;
+		/* font-size must be handled via clamp() in markup per policy — removed fixed rem here */
 	}
-	#hero-logo { top: 30% !important; }
+	/* Positioning driven by transforms; remove top overrides */
 }
 
 /* At slightly larger widths, give the logo more vertical space from the title */
 @media (min-width: 883px) and (max-width: 1200px) {
-	#hero-logo { top: 30% !important; }
-	#hero-title { top: 62% !important; }
+	/* removed top:... overrides; layout is driven by transform/slot centers */
 }
 
 /* Ensure on very small widths everything stacks reasonably */
 @media (max-width: 639px) {
-	#hero-logo { top: 34% !important; }
-	#hero-title { top: 60% !important; }
-	#hero-subtitle { top: 70% !important; }
+	/* removed top:... overrides; fine-grained adjustments handled via container/tokenized transforms */
 }
 
 /* Reduce hero title size on very large screens (1440px+) to avoid unwanted wrapping */
 @media (min-width: 1400px) {
 	#hero-title {
-		font-size: 3rem !important; /* smaller max for large viewports */
+		/* keep typography sizing via clamp() in markup; do not use fixed font-size here */
 		line-height: 1.02;
 	}
 }

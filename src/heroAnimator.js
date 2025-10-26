@@ -11,10 +11,25 @@
   const logo = q('hero-logo');
   const title = q('hero-title');
   const subtitle = q('hero-subtitle');
-  const cta = q('hero-cta');
+  // read anchors from guide row slots (single source of truth)
+  const slotLogo = q('slot-logo');
+  const slotTitle = q('slot-title');
+  const slotCta = q('slot-cta');
 
-  const RANGE = 0.18; // fraction of viewport height that completes the animation
+  // token reader helper
+  function readTokenNumber(varName, fallback) {
+    const raw = getComputedStyle(document.documentElement).getPropertyValue(varName);
+    if (!raw) return fallback;
+    const n = parseFloat(raw.trim());
+    return Number.isFinite(n) ? n : fallback;
+  }
 
+  // runtime tokens (will be refreshed in measureTargets)
+  let RANGE = readTokenNumber('--hero-range', 0.24);
+  let PAD = readTokenNumber('--hero-pad', 24);
+  let LOGO_SCALE_TOKEN = readTokenNumber('--hero-logo-scale', 0.10);
+  let TITLE_SCALE_TOKEN = readTokenNumber('--hero-title-scale', 0.06);
+  let SUB_LIFT = readTokenNumber('--hero-sub-lift', 20);
   function centerOf(el) {
     const r = el.getBoundingClientRect();
     return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
@@ -25,29 +40,43 @@
   let endLogo = null, endTitle = null;
 
   function measureTargets() {
+    // refresh tokens
+    RANGE = readTokenNumber('--hero-range', 0.24);
+    PAD = readTokenNumber('--hero-pad', 24);
+    LOGO_SCALE_TOKEN = readTokenNumber('--hero-logo-scale', 0.10);
+    TITLE_SCALE_TOKEN = readTokenNumber('--hero-title-scale', 0.06);
+    SUB_LIFT = readTokenNumber('--hero-sub-lift', 20);
+
     const vw = window.innerWidth, vh = window.innerHeight;
     startLogo = logo ? centerOf(logo) : { x: vw / 2, y: vh / 2 };
     startTitle = title ? centerOf(title) : { x: vw / 2, y: vh / 2 };
-    // end targets: logo -> CTA left padding, title -> CTA center Y & center X
-    const cr = cta ? cta.getBoundingClientRect() : null;
-    const paddingLeft = 24;
-    endLogo = cr ? { x: paddingLeft + (logo ? logo.getBoundingClientRect().width / 2 : 24), y: cr.top + cr.height / 2 - 6 } : { x: paddingLeft + 24, y: 48 };
-    endTitle = cr ? { x: vw / 2, y: cr.top + cr.height / 2 } : { x: vw / 2, y: 48 };
+
+    // measure end centers from the guide slots (single source of truth)
+    const sl = slotLogo ? slotLogo.getBoundingClientRect() : null;
+    const st = slotTitle ? slotTitle.getBoundingClientRect() : null;
+    const sc = slotCta ? slotCta.getBoundingClientRect() : null;
+
+    endLogo = sl ? { x: sl.left + sl.width / 2, y: sl.top + sl.height / 2 } : { x: PAD + (logo ? logo.getBoundingClientRect().width / 2 : 24), y: 48 };
+    endTitle = st ? { x: st.left + st.width / 2, y: st.top + st.height / 2 } : { x: vw / 2, y: 48 };
+    // slotCta available for reference if needed
   }
 
   function applyTransformsAtProgress(p) {
     // p in [0,1]
+    // eased progress for nicer cross-fade
+    const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
+    const e = easeOutCubic(p);
+
     if (logo && startLogo && endLogo) {
       const dx = endLogo.x - startLogo.x;
       const dy = endLogo.y - startLogo.y;
       const tx = dx * p;
       let ty = dy * p;
-      // nudge final position 4px down when animation is fully complete to match design request
-        // smoothly nudge final position down up to 4px as p -> 1 to avoid sudden jumps
-        const easeOutCubic = t => 1 - Math.pow(1 - t, 3);
-        const extra = 4 * easeOutCubic(p);
-        ty += extra;
-      const s = 1 - 0.12 * p;
+      // smoothly nudge final position down up to 4px as p -> 1 (tiny visual micro-adjust)
+      const extra = 4 * e;
+      ty += extra;
+      // use tokenized scale amounts rather than magic constants
+      const s = 1 - LOGO_SCALE_TOKEN * p;
       logo.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
       logo.style.transformOrigin = 'center center';
     }
@@ -57,14 +86,32 @@
       const dy = endTitle.y - startTitle.y;
       const tx = dx * p;
       const ty = dy * p;
-      const s = 1 - 0.06 * p;
+      const s = 1 - TITLE_SCALE_TOKEN * p;
       title.style.transform = `translate(${tx}px, ${ty}px) scale(${s})`;
       title.style.transformOrigin = 'center center';
     }
 
+    // cross-fade: hide the body (animating) logo/title as progress increases,
+    // and fade in the nav slot logo/title which act as the printed final state.
+    if (logo) {
+      const bodyLogoOpacity = Math.max(0, 1 - e * 1.05);
+      logo.style.opacity = String(bodyLogoOpacity.toFixed(3));
+    }
+    if (title) {
+      const bodyTitleOpacity = Math.max(0, 1 - e * 1.05);
+      title.style.opacity = String(bodyTitleOpacity.toFixed(3));
+    }
+
+    if (slotLogo) {
+      slotLogo.style.opacity = String(Math.min(1, e).toFixed(3));
+    }
+    if (slotTitle) {
+      slotTitle.style.opacity = String(Math.min(1, e).toFixed(3));
+    }
+
     if (subtitle) {
       const fade = Math.max(0, 1 - p * 1.6);
-      const lift = -20 * p;
+      const lift = -SUB_LIFT * p;
       subtitle.style.opacity = String(fade.toFixed(3));
       subtitle.style.transform = `translateY(${lift}px)`;
     }
@@ -107,7 +154,12 @@
       return;
     }
     window.addEventListener('scroll', onScroll, { passive: true });
+    // recompute geometry on resize/orientation changes and when fonts are ready to avoid layout shifts
     window.addEventListener('resize', () => { measureTargets(); onScroll(); });
+    window.addEventListener('orientationchange', () => { measureTargets(); onScroll(); });
+    if (document && document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => { measureTargets(); onScroll(); }).catch(() => {});
+    }
     // start RAF loop
     if (!raf) raf = requestAnimationFrame(updateLoop);
   }
@@ -119,5 +171,5 @@
     window.addEventListener('DOMContentLoaded', () => setTimeout(init, 60));
   }
 })();
-      window.addEventListener('DOMContentLoaded', () => setTimeout(init, 60));
+    
 
