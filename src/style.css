@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Color morph variables for hero (0% = black, 100% = white lightness) */
+:root {
+	--bg-lightness: 0%;
+	--text-lightness: 100%;
+}
+
+#hero-section {
+	background-color: hsl(0 0% var(--bg-lightness));
+	color: hsl(0 0% var(--text-lightness));
+	/* no CSS transition here; animation is driven by JS */
+	transition: none;
+}

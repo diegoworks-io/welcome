@@ -1,6 +1,7 @@
 import './style.css'
 import { Hero } from './Hero.js';
 import { Footer } from './Footer.js';
+import './heroScroll.js';
 
 document.querySelector('#app').innerHTML = Hero() + Footer();
 
