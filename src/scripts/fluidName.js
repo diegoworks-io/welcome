@@ -8,6 +8,106 @@ export function initFluidName() {
     const stage1NameText = shell.querySelector('.stage1 .hero-text');
     const stage2LeftCol = shell.querySelector('.stage2 .left-col');
     const stage2RightCol = shell.querySelector('.stage2 .right-col');
+    const tijuanaTimeEl = shell.querySelector('#tijuana-time');
+    const layoutTabs = Array.from(shell.querySelectorAll('[data-layout-target]'));
+    const layoutPanes = Array.from(shell.querySelectorAll('[data-layout-pane]'));
+    const projectTabs = Array.from(shell.querySelectorAll('[data-project-target]'));
+    const projectPanes = Array.from(shell.querySelectorAll('[data-project-pane]'));
+    const tijuanaTimeZone = 'America/Tijuana';
+
+    function setLayoutPane(id) {
+      layoutPanes.forEach((pane) => {
+        pane.hidden = pane.dataset.layoutPane !== id;
+      });
+
+      layoutTabs.forEach((tab) => {
+        const isActive = tab.dataset.layoutTarget === id;
+        tab.classList.toggle('is-active', isActive);
+        tab.setAttribute('aria-selected', isActive ? 'true' : 'false');
+      });
+    }
+
+    layoutTabs.forEach((tab) => {
+      tab.addEventListener('click', () => setLayoutPane(tab.dataset.layoutTarget));
+    });
+
+    setLayoutPane('a');
+
+    function setProjectPane(id) {
+      projectPanes.forEach((pane) => {
+        pane.hidden = pane.dataset.projectPane !== id;
+      });
+
+      projectTabs.forEach((tab) => {
+        const isActive = tab.dataset.projectTarget === id;
+        tab.classList.toggle('node-card--active', isActive);
+      });
+    }
+
+    projectTabs.forEach((tab) => {
+      tab.addEventListener('click', () => setProjectPane(tab.dataset.projectTarget));
+    });
+
+    setProjectPane('konbi');
+
+    function getTimeZoneOffsetMinutes(date, timeZone) {
+      const dtf = new Intl.DateTimeFormat('en-US', {
+        timeZone,
+        hour12: false,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+
+      const parts = dtf.formatToParts(date);
+      const map = {};
+      parts.forEach((part) => {
+        if (part.type !== 'literal') map[part.type] = part.value;
+      });
+
+      const asUtc = Date.UTC(
+        Number(map.year),
+        Number(map.month) - 1,
+        Number(map.day),
+        Number(map.hour),
+        Number(map.minute),
+        Number(map.second)
+      );
+
+      return (asUtc - date.getTime()) / 60000;
+    }
+
+    function formatOffsetLabel(diffMinutes) {
+      const roundedHours = Math.round(Math.abs(diffMinutes) / 60);
+      if (roundedHours === 0) return 'same time as you';
+      return diffMinutes > 0
+        ? `${roundedHours}h ahead of you`
+        : `${roundedHours}h behind you`;
+    }
+
+    function updateTijuanaTime() {
+      if (!tijuanaTimeEl) return;
+      const now = new Date();
+
+      const localOffset = -now.getTimezoneOffset();
+      const tijuanaOffset = getTimeZoneOffsetMinutes(now, tijuanaTimeZone);
+      const diffMinutes = tijuanaOffset - localOffset;
+
+      const timeLabel = new Intl.DateTimeFormat([], {
+        timeZone: tijuanaTimeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: false
+      }).format(now);
+
+      tijuanaTimeEl.textContent = `${timeLabel} · ${formatOffsetLabel(diffMinutes)}`;
+    }
+
+    updateTijuanaTime();
+    window.setInterval(updateTijuanaTime, 30000);
 
     function emitStage1Layout() {
       if (!shell || !stage1) return;
@@ -80,7 +180,10 @@ export function initFluidName() {
 
     // toggle on click anywhere in the component
     shell.addEventListener('click', (e) => {
-      if (e.target.tagName === 'BUTTON' || e.target.closest('a')) return;
+      const target = e.target;
+      if (!(target instanceof Element)) return;
+      if (target.closest('[data-no-stage-toggle]')) return;
+      if (target.tagName === 'BUTTON' || target.closest('a')) return;
       setStage(stage2.classList.contains('opacity-0'));
     });
   
