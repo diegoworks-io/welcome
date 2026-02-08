@@ -1,0 +1,8 @@
+:root {
+  --color-bg: #000000;
+  --color-text: #ffffff;
+}
+
+/* helper classes */
+.bg-theme { background: var(--color-bg); }
+.text-theme { color: var(--color-text); }
