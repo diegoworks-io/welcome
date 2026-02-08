@@ -1,5 +1,22 @@
 import React, { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
+import {
+  vertShader,
+  fragShaderPoint,
+  fragShaderDivergence,
+  fragShaderPressure,
+  fragShaderGradientSubtract,
+  fragShaderAdvection,
+  fragShaderOutputShader
+} from './fluid/shaders.js'
+import {
+  createShader,
+  createShaderProgram,
+  getUniforms,
+  createFBO,
+  createDoubleFBO,
+  blit
+} from './fluid/gl-utils.js'
 
 export default function FluidNameClient() {
   const canvasRef = useRef(null)
@@ -45,18 +62,6 @@ export default function FluidNameClient() {
     }
     gl.getExtension('OES_texture_float')
 
-    function createShader(sourceCode, type) {
-      const shader = gl.createShader(type)
-      gl.shaderSource(shader, sourceCode)
-      gl.compileShader(shader)
-      if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-        console.error('Shader compile error', gl.getShaderInfoLog(shader))
-        gl.deleteShader(shader)
-        return null
-      }
-      return shader
-    }
-
     function createTextCanvasTexture() {
       canvasTexture = gl.createTexture()
       gl.bindTexture(gl.TEXTURE_2D, canvasTexture)
@@ -81,12 +86,12 @@ export default function FluidNameClient() {
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, textureEl)
     }
 
-    function createProgram(elId) {
-      const fragSource = document.getElementById(elId).innerHTML
-      const shader = createShader(fragSource, gl.FRAGMENT_SHADER)
-      const vertexShader = createShader(document.getElementById('vertShader').innerHTML, gl.VERTEX_SHADER)
-      const program = createShaderProgram(vertexShader, shader)
-      const uniforms = getUniforms(program)
+
+    function createProgramFromSource(vsSource, fsSource) {
+      const vs = createShader(gl, vsSource, gl.VERTEX_SHADER)
+      const fs = createShader(gl, fsSource, gl.FRAGMENT_SHADER)
+      const program = createShaderProgram(gl, vs, fs)
+      const uniforms = getUniforms(gl, program)
       return { program, uniforms }
     }
 
@@ -187,13 +192,13 @@ export default function FluidNameClient() {
 
     function updateMousePosition(eX, eY) { pointer.moved = true; pointer.dx = 5 * (eX - pointer.x); pointer.dy = 5 * (eY - pointer.y); pointer.x = eX; pointer.y = eY }
 
-    const vertexShader = createShader(document.getElementById('vertShader').innerHTML, gl.VERTEX_SHADER)
-    const splatProgram = createProgram('fragShaderPoint')
-    const divergenceProgram = createProgram('fragShaderDivergence')
-    const pressureProgram = createProgram('fragShaderPressure')
-    const gradientSubtractProgram = createProgram('fragShaderGradientSubtract')
-    const advectionProgram = createProgram('fragShaderAdvection')
-    const outputShaderProgram = createProgram('fragShaderOutputShader')
+    const vertexShader = createShader(gl, vertShader, gl.VERTEX_SHADER)
+    const splatProgram = createProgramFromSource(vertShader, fragShaderPoint)
+    const divergenceProgram = createProgramFromSource(vertShader, fragShaderDivergence)
+    const pressureProgram = createProgramFromSource(vertShader, fragShaderPressure)
+    const gradientSubtractProgram = createProgramFromSource(vertShader, fragShaderGradientSubtract)
+    const advectionProgram = createProgramFromSource(vertShader, fragShaderAdvection)
+    const outputShaderProgram = createProgramFromSource(vertShader, fragShaderOutputShader)
 
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW); gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW); gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0); gl.enableVertexAttribArray(0);
 
