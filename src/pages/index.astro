@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import Experience from '../components/Experience.jsx';
 ---
 
 <Layout title="Konbi · Diego Works">
@@ -18,6 +19,12 @@ import Layout from '../layouts/Layout.astro';
                 <a href="mailto:hello@diegoworks.io" class="text-white hover:text-zinc-400 transition-colors underline decoration-zinc-800 underline-offset-8 text-sm tracking-wide">
                     hello@diegoworks.io
                 </a>
+            </div>
+        </section>
+        
+        <section class="w-full max-w-4xl mt-12">
+            <div class="h-[500px] w-full bg-zinc-900 rounded-md overflow-hidden">
+                <Experience client:load />
             </div>
         </section>
     </main>
