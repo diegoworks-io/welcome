@@ -13,6 +13,7 @@ const { title = 'Konbi · Diego Works' } = Astro.props;
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="/fonts/fonts.css">
+	<link rel="stylesheet" href="/colors/colors.css">
 	</head>
 	<body>
 		<slot />
@@ -25,6 +26,8 @@ const { title = 'Konbi · Diego Works' } = Astro.props;
 		margin: 0;
 		width: 100%;
 		height: 100%;
-    font-family: var(--font-sans);
+		font-family: var(--font-sans);
+		background: var(--color-bg);
+		color: var(--color-text);
 	}
 </style>
