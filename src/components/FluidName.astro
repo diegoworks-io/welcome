@@ -1,5 +1,5 @@
 
-<div class="grid grid-cols-[1fr_2fr] min-h-screen" id="fluid-shell">
+<div class="min-h-screen flex items-center justify-center" id="fluid-shell">
   <div id="left-column" class="p-8">
     <!-- Sidebar column (left); reserved for metadata / controls -->
   </div>
@@ -216,7 +216,7 @@ const fontOptions = {
 const params = {
   fontName: "Verdana",
   isBold: false,
-  fontSize: 80,
+  fontSize: 120,
   text: "Diego González",
   pointerSize: null,
   color: {r: 1., g: .0, b: .5}
@@ -473,6 +473,27 @@ function resizeCanvas() {
   canvasEl.height = textureEl.height = window.innerHeight;
   initFBOs();
   updateTextCanvas();
+  updateUtexelUniforms();
+}
+
+function updateUtexelUniforms() {
+  // Update programs that expect u_texel or texel sizes
+  try {
+    if (divergenceProgram && divergenceProgram.uniforms && divergenceProgram.uniforms.u_texel) {
+      gl.useProgram(divergenceProgram.program);
+      gl.uniform2f(divergenceProgram.uniforms.u_texel, velocity.texelSizeX, velocity.texelSizeY);
+    }
+    if (pressureProgram && pressureProgram.uniforms && pressureProgram.uniforms.u_texel) {
+      gl.useProgram(pressureProgram.program);
+      gl.uniform2f(pressureProgram.uniforms.u_texel, velocity.texelSizeX, velocity.texelSizeY);
+    }
+    if (advectionProgram && advectionProgram.uniforms && advectionProgram.uniforms.u_texel) {
+      gl.useProgram(advectionProgram.program);
+      gl.uniform2f(advectionProgram.uniforms.u_texel, outputColor.texelSizeX, outputColor.texelSizeY);
+    }
+  } catch (err) {
+    // ignore if programs not ready yet
+  }
 }
 
 function setupEvents() {
@@ -547,6 +568,15 @@ function createMeltTimeline() {
     onUpdate: () => { pointer.moved = true; }
   }, 0);
 
+  tl.eventCallback('onComplete', () => {
+    const shell = document.getElementById('fluid-shell');
+    if (shell) {
+      shell.classList.add('is-deployed');
+      // after layout change, ensure canvas and FBOs resize and uniforms updated
+      setTimeout(() => { resizeCanvas(); }, 50);
+    }
+  });
+
   return tl;
 }
 
@@ -556,9 +586,23 @@ setTimeout(() => { loader.style.display = 'none'; render(); createMeltTimeline()
 </script>
 
 <style>
-  #fluid-shell { font-family: inherit; }
+  #fluid-shell { font-family: inherit; transition: all 700ms cubic-bezier(.2,.9,.2,1); }
   #canvas-column { display: flex; align-items: center; justify-content: center; }
   #fluid-canvas { width: 100%; height: 100%; display: block; position: fixed; top: 0; left: 0; }
   #canvas-loader { pointer-events: none; }
   body, html { padding: 0; margin: 0; }
+
+  /* Deployed state: container becomes grid and reveals left column */
+  #fluid-shell.is-deployed {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    padding-left: 5rem; /* px-20 */
+    padding-right: 5rem;
+    gap: 5rem; /* gap-20 */
+    align-items: start;
+    justify-items: stretch;
+  }
+
+  /* ensure left column content aligns to the top when deployed */
+  #fluid-shell.is-deployed #left-column { align-self: start; }
 </style>
