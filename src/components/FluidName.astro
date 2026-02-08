@@ -1,0 +1,65 @@
+---
+---
+
+<div class="grid grid-cols-[1fr_2fr] min-h-screen" id="fluid-shell">
+  <div id="left-column" class="p-8">
+    <!-- Sidebar column (left); reserved for metadata / controls -->
+  </div>
+
+  <div id="canvas-column" class="relative bg-black">
+    <canvas id="fluid-canvas" width="1200" height="800" aria-label="Fluid Name Canvas"></canvas>
+    <div id="canvas-loader" class="absolute inset-0 flex items-center justify-center text-white bg-black/60">
+      <div class="text-sm uppercase tracking-widest">System Initializing</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+  import { gsap } from 'gsap';
+
+  // State objects represent where the 'name' should render.
+  // Note: coordinates are normalized (0..1) relative to canvas.
+  const stateCenter = { x: 0.5, y: 0.5, scale: 1.0 };
+  const stateSidebar = { x: 0.15, y: 0.08, scale: 0.4 };
+
+  const canvas = document.getElementById('fluid-canvas');
+  const loader = document.getElementById('canvas-loader');
+
+  function initWebGLPlaceholder() {
+    // Placeholder WebGL init — real initialization / GLSL will be provided later.
+    const gl = canvas.getContext('webgl2') || canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+    // Expose for debugging while developing the shader stack
+    window.__fluidGL = gl;
+    // Keep loader visible until the real initialization replaces it. For now hide after a short tick.
+    setTimeout(() => { loader.style.display = 'none'; }, 300);
+  }
+
+  function createGsapTimeline() {
+    const tl = gsap.timeline({ defaults: { ease: 'power2.inOut' } });
+    // start after 1.5s, animate normalized stateCenter -> stateSidebar
+    tl.delay(1.5);
+    tl.to(stateCenter, {
+      x: stateSidebar.x,
+      y: stateSidebar.y,
+      scale: stateSidebar.scale,
+      duration: 1.2,
+      onUpdate: () => {
+        // Placeholder: update shader uniforms / render with new state
+        // e.g. updateUniforms(stateCenter.x, stateCenter.y, stateCenter.scale)
+      }
+    });
+    return tl;
+  }
+
+  if (typeof window !== 'undefined') {
+    initWebGLPlaceholder();
+    createGsapTimeline();
+  }
+</script>
+
+<style>
+  #fluid-shell { font-family: inherit; }
+  #canvas-column { display: flex; align-items: center; justify-content: center; }
+  #fluid-canvas { width: 100%; height: 100%; display: block; }
+  #canvas-loader { pointer-events: none; }
+</style>
