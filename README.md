@@ -1,46 +1,35 @@
-# Astro Starter Kit: Basics
+# Diego Works - Portfolio (Astro)
 
-```sh
-npm create astro@latest -- --template basics
-```
+Stage-driven personal site built with Astro.
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Overview
 
-## 🚀 Project Structure
+The homepage is a two-stage experience:
 
-Inside of your Astro project, you'll see the following folders and files:
+- Stage 1: cover/intro view.
+- Stage 2: split layout with:
+  - left column (name, role, socials, local time offset line)
+  - right protected area (tabbed content: About, Education, Projects, Tech)
 
-```text
-/
-├── public/
-│   └── favicon.svg
-├── src
-│   ├── assets
-│   │   └── astro.svg
-│   ├── components
-│   │   └── Welcome.astro
-│   ├── layouts
-│   │   └── Layout.astro
-│   └── pages
-│       └── index.astro
-└── package.json
-```
+Background visuals are rendered in SVG layers with animated routing/network effects.
 
-To learn more about the folder structure of an Astro project, refer to [our guide on project structure](https://docs.astro.build/en/basics/project-structure/).
+## Key Files
 
-## 🧞 Commands
+- `src/components/FluidName.astro` - main stage layout and protected-area content.
+- `src/scripts/fluidName.js` - stage transitions, tab logic, project sub-tabs, local time display.
+- `src/components/BlueprintBg.astro` - SVG background shell and styling.
+- `src/scripts/blueprintBg.js` - animated network generation and stage-specific behavior.
+- `src/layouts/Layout.astro` - page shell/layout.
 
-All commands are run from the root of the project, from a terminal:
+## Scripts
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+- `npm run dev` - start local development server.
+- `npm run build` - production build.
+- `npm run preview` - preview built output.
+- `npm run astro check` - Astro diagnostics/type checks.
 
-## 👀 Want to learn more?
+## Development Notes
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+- Content in the protected area is intentionally no-scroll at page level.
+- Visual language inside the protected area favors horizontal separators over boxed cards.
+- Stage 1 transitions automatically into Stage 2 after a short delay.
