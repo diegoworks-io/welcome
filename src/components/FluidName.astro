@@ -1,12 +1,132 @@
-<div id="fluid-shell" class="min-h-screen flex items-center justify-center bg-theme text-theme">
-  <svg role="img" aria-label="Diego González" width="100%" height="100%" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet">
-    <g>
-      <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" style="font-family:var(--font-sans); font-weight:900; fill:var(--color-text); font-size:12vw;">Diego González</text>
-    </g>
-  </svg>
-</div>
+---
+import BlueprintBg from './BlueprintBg.astro';
+---
 
-<style>
-  #fluid-shell { font-family: var(--font-sans); }
-  svg { display: block; width: 100vw; height: 100vh; }
-</style>
+<div id="fluid-shell" class="min-h-screen h-screen flex items-center justify-center bg-black text-white relative overflow-hidden" role="region" aria-label="Fluid name container">
+  <BlueprintBg />
+  <div id="toggle-hint" class="absolute top-3 left-3 text-white/70 text-sm z-30 pointer-events-none">Click anywhere to toggle stage</div>
+
+  <!-- Stage 1: single centered line (smaller boxed container) -->
+  <div class="stage1-container flex flex-col items-center justify-center">
+    <div class="stage-box stage1 relative w-[90vw] max-w-[1100px] p-4 rounded-md flex flex-col items-center justify-center gap-1 bg-transparent z-10">
+    <div class="hero-wrap w-full flex items-center justify-center">
+      <svg role="img" aria-label="Diego González" viewBox="0 0 1000 1000" preserveAspectRatio="xMidYMid meet" class="w-full h-auto overflow-visible max-h-[36vh] md:max-h-[34vh]">
+        <g>
+            <text x="50%" y="50%" text-anchor="middle" dominant-baseline="middle" class="hero-text text-[clamp(64px,16vw,220px)] font-extrabold tracking-tight" fill="currentColor">Diego González</text>
+          </g>
+      </svg>
+    </div>
+      <!-- subtitle (absolute, positioned slightly below the name) -->
+      <div class="subtitle absolute left-1/2 top-[64%] md:top-[62%] -translate-x-1/2 -translate-y-0 text-center text-base md:text-lg text-white/80">Product Engineer &amp; Systems Architect</div>
+    </div>
+  </div>
+
+  <!-- Stage 2: two-column layout with name split into two rows, centered vertically -->
+  <div class="stage-box stage2 absolute inset-0 grid place-items-center opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
+    <div class="two-col w-[90vw] max-w-[1200px] h-[60vh] grid grid-cols-2 gap-6">
+      <div class="left-col flex flex-col items-start justify-center pr-6">
+        <!-- subtitle for stage 2 (above the name) -->
+        <div class="subtitle text-sm text-white/80 mb-4">Product Engineer &amp; Systems Architect</div>
+        <div class="name-rows flex flex-col gap-2 items-start">
+          <div class="row font-extrabold text-[clamp(36px,8vw,120px)] leading-none">Diego</div>
+          <div class="row font-extrabold text-[clamp(36px,8vw,120px)] leading-none">González</div>
+        </div>
+        <nav class="mt-8 flex flex-col gap-2 items-start text-sm text-white/84">
+          <a href="mailto:hello@diegoworks.io" class="hover:underline" aria-label="Email">hello@diegoworks.io</a>
+          <a href="https://linkedin.com/in/diegoworksio" target="_blank" rel="noreferrer" class="hover:underline" aria-label="LinkedIn">LinkedIn</a>
+          <a href="https://github.com/diegoworks-io" target="_blank" rel="noreferrer" class="hover:underline" aria-label="GitHub">GitHub</a>
+        </nav>
+      </div>
+      <div class="right-col h-full">
+        <div class="h-full w-full rounded-2xl border border-white/20 bg-white/[0.02]"></div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" is:inline>
+    const shell = document.getElementById('fluid-shell');
+    const toggleHint = document.getElementById('toggle-hint');
+    const stage1 = shell.querySelector('.stage1');
+    const stage2 = shell.querySelector('.stage2');
+    const stage1HeroWrap = shell.querySelector('.stage1 .hero-wrap');
+    const stage1Subtitle = shell.querySelector('.stage1 .subtitle');
+    const stage1NameText = shell.querySelector('.stage1 .hero-text');
+    const stage2LeftCol = shell.querySelector('.stage2 .left-col');
+    const stage2RightCol = shell.querySelector('.stage2 .right-col');
+
+    function emitStage1Layout() {
+      if (!shell || !stage1) return;
+      const shellRect = shell.getBoundingClientRect();
+      const rect = stage1.getBoundingClientRect();
+      const heroRect = stage1HeroWrap ? stage1HeroWrap.getBoundingClientRect() : rect;
+      const subtitleRect = stage1Subtitle ? stage1Subtitle.getBoundingClientRect() : rect;
+      const nameRect = stage1NameText ? stage1NameText.getBoundingClientRect() : heroRect;
+      const stage2LeftRect = stage2LeftCol ? stage2LeftCol.getBoundingClientRect() : rect;
+      const stage2RightRect = stage2RightCol ? stage2RightCol.getBoundingClientRect() : rect;
+      if (!shellRect.width || !shellRect.height) return;
+
+      window.dispatchEvent(new CustomEvent('stage1:layout', {
+        detail: {
+          x: (rect.left - shellRect.left) / shellRect.width,
+          y: (rect.top - shellRect.top) / shellRect.height,
+          width: rect.width / shellRect.width,
+          height: rect.height / shellRect.height,
+          nameLeft: (nameRect.left - shellRect.left) / shellRect.width,
+          nameRight: (nameRect.right - shellRect.left) / shellRect.width,
+          nameTop: (nameRect.top - shellRect.top) / shellRect.height,
+          nameBottom: (nameRect.bottom - shellRect.top) / shellRect.height,
+          heroTop: (heroRect.top - shellRect.top) / shellRect.height,
+          heroBottom: (heroRect.bottom - shellRect.top) / shellRect.height,
+          subtitleLeft: (subtitleRect.left - shellRect.left) / shellRect.width,
+          subtitleRight: (subtitleRect.right - shellRect.left) / shellRect.width,
+          subtitleTop: (subtitleRect.top - shellRect.top) / shellRect.height,
+          subtitleBottom: (subtitleRect.bottom - shellRect.top) / shellRect.height
+        }
+      }));
+
+      window.dispatchEvent(new CustomEvent('stage2:layout', {
+        detail: {
+          leftX: (stage2LeftRect.left - shellRect.left) / shellRect.width,
+          leftY: (stage2LeftRect.top - shellRect.top) / shellRect.height,
+          leftW: stage2LeftRect.width / shellRect.width,
+          leftH: stage2LeftRect.height / shellRect.height,
+          rightX: (stage2RightRect.left - shellRect.left) / shellRect.width,
+          rightY: (stage2RightRect.top - shellRect.top) / shellRect.height,
+          rightW: stage2RightRect.width / shellRect.width,
+          rightH: stage2RightRect.height / shellRect.height
+        }
+      }));
+    }
+
+    function setStage(isStage2) {
+      if (isStage2) {
+        stage1.classList.add('opacity-0', 'pointer-events-none', 'scale-95');
+        stage1.classList.add('transition', 'duration-300', 'ease-out');
+        stage2.classList.remove('opacity-0', 'pointer-events-none');
+        // notify blueprint to shift focus for Stage 2
+        try { window.dispatchEvent(new Event('stage2:shown')); } catch (e) {}
+      } else {
+        stage1.classList.remove('opacity-0', 'pointer-events-none', 'scale-95');
+        stage2.classList.add('opacity-0', 'pointer-events-none');
+        // notify blueprint to animate when Stage 1 is shown
+        try { window.dispatchEvent(new Event('stage1:shown')); } catch (e) {}
+      }
+      toggleHint.textContent = isStage2 ? 'Stage 2 — click to return' : 'Stage 1 — click to advance';
+      window.requestAnimationFrame(() => emitStage1Layout());
+    }
+
+    // initialize to Stage 1
+    setStage(false);
+    window.addEventListener('resize', emitStage1Layout);
+    window.requestAnimationFrame(() => emitStage1Layout());
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => emitStage1Layout());
+    }
+
+    // toggle on click anywhere in the component
+    shell.addEventListener('click', (e) => {
+      if (e.target.tagName === 'BUTTON' || e.target.closest('a')) return;
+      setStage(stage2.classList.contains('opacity-0'));
+    });
+  </script>
+</div>
