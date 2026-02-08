@@ -1,31 +1,10 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Experience from '../components/Experience.jsx';
+import Hero from '../components/Hero.astro';
 ---
 
 <Layout title="Konbi · Diego Works">
-    <main class="flex flex-col items-center justify-center min-h-screen p-6 text-center bg-zinc-950 text-zinc-100 font-sans">
-        <header class="mb-12">
-            <h1 class="text-5xl font-black tracking-tighter uppercase mb-2">Diego González</h1>
-            <p class="text-sm tracking-[0.2em] text-zinc-500 uppercase">Operational clarity for SMEs</p>
-        </header>
-                
-        <section class="max-w-md space-y-6">
-            <p class="text-zinc-400 font-light leading-relaxed text-lg">
-                I design and implement operational systems that work in the real world.
-            </p>
-            <div class="pt-8 border-t border-zinc-900">
-                <p class="text-xs text-zinc-600 uppercase tracking-widest mb-6 italic">Resume & Project Lab coming soon</p>
-                <a href="mailto:hello@diegoworks.io" class="text-white hover:text-zinc-400 transition-colors underline decoration-zinc-800 underline-offset-8 text-sm tracking-wide">
-                    hello@diegoworks.io
-                </a>
-            </div>
-        </section>
-        
-        <section class="w-full max-w-4xl mt-12">
-            <div class="h-[500px] w-full bg-zinc-900 rounded-md overflow-hidden">
-                <Experience client:load />
-            </div>
-        </section>
-    </main>
+  <main class="flex items-center justify-center min-h-screen bg-zinc-950 text-zinc-100">
+    <Hero />
+  </main>
 </Layout>
