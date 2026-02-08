@@ -1,6 +1,5 @@
 export function initFluidName() {
     const shell = document.getElementById('fluid-shell');
-    const toggleHint = document.getElementById('toggle-hint');
     const stage1 = shell.querySelector('.stage1');
     const stage2 = shell.querySelector('.stage2');
     const stage1HeroWrap = shell.querySelector('.stage1 .hero-wrap');
@@ -14,6 +13,8 @@ export function initFluidName() {
     const projectTabs = Array.from(shell.querySelectorAll('[data-project-target]'));
     const projectPanes = Array.from(shell.querySelectorAll('[data-project-pane]'));
     const tijuanaTimeZone = 'America/Tijuana';
+    const AUTO_STAGE2_DELAY_MS = 3000;
+    let autoStageTimer = null;
 
     function setLayoutPane(id) {
       layoutPanes.forEach((pane) => {
@@ -166,25 +167,26 @@ export function initFluidName() {
         // notify blueprint to animate when Stage 1 is shown
         try { window.dispatchEvent(new Event('stage1:shown')); } catch (e) {}
       }
-      toggleHint.textContent = isStage2 ? 'Stage 2 — click to return' : 'Stage 1 — click to advance';
       window.requestAnimationFrame(() => emitStage1Layout());
+    }
+
+    function enterStage2() {
+      if (autoStageTimer) {
+        window.clearTimeout(autoStageTimer);
+        autoStageTimer = null;
+      }
+      setStage(true);
     }
 
     // initialize to Stage 1
     setStage(false);
+    autoStageTimer = window.setTimeout(() => {
+      enterStage2();
+    }, AUTO_STAGE2_DELAY_MS);
+
     window.addEventListener('resize', emitStage1Layout);
     window.requestAnimationFrame(() => emitStage1Layout());
     if (document.fonts && document.fonts.ready) {
       document.fonts.ready.then(() => emitStage1Layout());
     }
-
-    // toggle on click anywhere in the component
-    shell.addEventListener('click', (e) => {
-      const target = e.target;
-      if (!(target instanceof Element)) return;
-      if (target.closest('[data-no-stage-toggle]')) return;
-      if (target.tagName === 'BUTTON' || target.closest('a')) return;
-      setStage(stage2.classList.contains('opacity-0'));
-    });
-  
 }
