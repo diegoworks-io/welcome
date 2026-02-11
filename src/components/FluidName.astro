@@ -1,8 +1,10 @@
 ---
 import BlueprintBg from './BlueprintBg.astro';
+import Stage2Identity from './fluid/Stage2Identity.astro';
+import Stage2Panel from './fluid/Stage2Panel.astro';
 ---
 
-<div id="fluid-shell" class="min-h-screen h-screen flex items-center justify-center bg-black text-white relative overflow-hidden" role="region" aria-label="Fluid name container">
+<div id="fluid-shell" class="h-full min-h-0 flex items-center justify-center bg-black text-white relative overflow-hidden" role="region" aria-label="Fluid name container">
   <BlueprintBg />
 
   <!-- Stage 1: single centered line (smaller boxed container) -->
@@ -21,125 +23,10 @@ import BlueprintBg from './BlueprintBg.astro';
   </div>
 
   <!-- Stage 2: two-column layout with name split into two rows, centered vertically -->
-  <div class="stage-box stage2 absolute inset-0 grid place-items-center opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
-    <div class="two-col w-[90vw] max-w-[1200px] h-[60vh] grid grid-cols-2 gap-6">
-      <div class="left-col flex flex-col items-start justify-center pr-6">
-        <!-- subtitle for stage 2 (above the name) -->
-        <div class="subtitle text-sm text-white/80 mb-4">Product Engineer &amp; Systems Architect</div>
-        <div class="name-rows flex flex-col gap-2 items-start">
-          <div class="row font-extrabold text-[clamp(36px,8vw,120px)] leading-none">Diego</div>
-          <div class="row font-extrabold text-[clamp(36px,8vw,120px)] leading-none">González</div>
-        </div>
-        <nav class="mt-8 flex flex-col gap-2 items-start text-sm text-white/84">
-          <a href="mailto:hello@diegoworks.io" class="hover:underline" aria-label="Email">hello@diegoworks.io</a>
-          <a href="https://linkedin.com/in/diegoworksio" target="_blank" rel="noreferrer" class="hover:underline" aria-label="LinkedIn">LinkedIn</a>
-          <a href="https://github.com/diegoworks-io" target="_blank" rel="noreferrer" class="hover:underline" aria-label="GitHub">GitHub</a>
-        </nav>
-        <p id="tijuana-time" class="mt-4 text-xs text-white/62">
-          --:-- · same time as you
-        </p>
-      </div>
-      <div class="right-col h-full">
-        <section
-          class="proto-panel h-full w-full rounded-2xl bg-black/35 backdrop-blur-[1px] p-4 md:p-5 flex flex-col gap-4"
-          data-no-stage-toggle
-          aria-label="Protected content layout studies"
-        >
-          <header class="border-b border-white/10 pb-3">
-            <nav class="layout-tabs flex items-center gap-4" role="tablist" aria-label="Protected area navigation">
-              <button type="button" data-layout-target="a" role="tab" aria-selected="true" class="layout-tab is-active">About Me</button>
-              <button type="button" data-layout-target="b" role="tab" aria-selected="false" class="layout-tab">Education</button>
-              <button type="button" data-layout-target="c" role="tab" aria-selected="false" class="layout-tab">Projects</button>
-              <button type="button" data-layout-target="d" role="tab" aria-selected="false" class="layout-tab">Tech</button>
-            </nav>
-          </header>
-
-          <div class="min-h-0 flex-1">
-            <article data-layout-pane="a" class="layout-pane h-full">
-              <div class="h-full h-strip p-4 md:p-5 overflow-y-auto">
-                <p class="text-[11px] uppercase tracking-[0.14em] text-cyan-200/80">About Me</p>
-                <div class="about-copy mt-3 space-y-4 text-sm leading-relaxed text-white/82">
-                  <p>I spent six years leading a binational hospitality group. I remain a member of the board, where my work has shifted into crafting the custom software we use to scale. I learned that great ideas fail when the internal infrastructure is manual and the data is invisible.</p>
-                  <p>I build software that allows me to see business problems from a different angle. I treat every problem as a live environment to test how structure and digital rhythm can replace reactive execution.</p>
-                  <p>I am driven by the tools emerging every day that allow a single builder to create professional-grade infrastructure. These capabilities enable me to build the bridges I need to see data clearly and orchestrate complex systems on a personal scale.</p>
-                </div>
-              </div>
-            </article>
-
-            <article data-layout-pane="b" class="layout-pane h-full" hidden>
-              <div class="h-full h-strip p-4 md:p-5 overflow-y-auto">
-                <p class="text-[11px] uppercase tracking-[0.14em] text-emerald-200/80">Education</p>
-                <div class="mt-3 space-y-3 text-sm leading-relaxed text-white/82">
-                  <p>B.A. in Business Administration and Management | CETYS Universidad</p>
-                  <p>Foundations in Economics &amp; Industrial Design | UABC / UAS</p>
-                </div>
-
-                <p class="text-[11px] uppercase tracking-[0.14em] text-emerald-200/80 mt-6">Certifications</p>
-                <div class="mt-3 space-y-3 text-sm leading-relaxed text-white/82">
-                  <p>Finance for Managers | IESE Business School</p>
-                  <p>Budgeting and Scheduling Projects | UC Irvine</p>
-                </div>
-
-                <p class="text-[11px] uppercase tracking-[0.14em] text-emerald-200/80 mt-6">Languages</p>
-                <div class="mt-3 space-y-3 text-sm leading-relaxed text-white/82">
-                  <p>Spanish | Native</p>
-                  <p>English | Bilingual</p>
-                </div>
-              </div>
-            </article>
-
-            <article data-layout-pane="c" class="layout-pane h-full" hidden>
-              <div class="h-full grid grid-rows-[auto,1fr] gap-3">
-                <div class="h-strip p-2">
-                  <div class="flex items-center gap-3">
-                    <button type="button" data-project-target="konbi" class="node-card node-card--active px-2 py-1">KONBI</button>
-                    <button type="button" data-project-target="boki" class="node-card px-2 py-1">BOKI</button>
-                  </div>
-                </div>
-                <div class="h-strip p-4 md:p-5 overflow-y-auto">
-                  <div data-project-pane="konbi" class="projects-copy space-y-4 text-sm leading-relaxed text-white/82">
-                    <p>A live R&amp;D environment built within a 24/7 small business. What started as an experiment in August 2025 to replace legacy spreadsheets is now a functioning ecosystem of custom end-to-end pipelines. I am a solo developer shipping features to a non-tech crew where the feedback loop is instant and the tolerance for failure is zero.</p>
-                    <ul class="space-y-2 list-disc pl-5 marker:text-white/45">
-                      <li><span class="text-white/90">Biometric State Machine:</span> 1-to-1 Face ID pipeline for automated attendance and payroll validation.</li>
-                      <li><span class="text-white/90">Operational Telemetry:</span> Real-time dashboards for labor and procurement instrumentation.</li>
-                    </ul>
-                    <p>React, Tailwind CSS, Supabase, Vercel, Gemini, Codex and local models.</p>
-                  </div>
-
-                  <div data-project-pane="boki" class="projects-copy space-y-4 text-sm leading-relaxed text-white/82" hidden>
-                    <p><span class="text-white/90 font-medium">Capture anything. See everything.</span> Capture what’s happening in your operations. Boki turns it into usable data.</p>
-                    <p class="text-white/90 font-medium">What Boki does</p>
-                    <ul class="space-y-2 list-disc pl-5 marker:text-white/45">
-                      <li><span class="text-white/90">Name your counters:</span> Create your own counters, labels, and markers with a friendly UI, no spreadsheets or schemas required.</li>
-                      <li><span class="text-white/90">Automatic structure:</span> Every tap becomes timestamped, structured data. Boki builds the database behind the scenes as you log.</li>
-                      <li><span class="text-white/90">See patterns live:</span> Filter, sort, visualize, and compare counters in real time. Then export if you need to share.</li>
-                    </ul>
-                    <p class="flex flex-wrap gap-4">
-                      <a href="https://bokiapp.me/" target="_blank" rel="noreferrer" class="project-link-accent">Landing page</a>
-                      <a href="https://bokiapp.me/demo" target="_blank" rel="noreferrer" class="project-link-accent">Proof of concept demo</a>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </article>
-
-            <article data-layout-pane="d" class="layout-pane h-full" hidden>
-              <div class="h-full h-strip p-4 md:p-5 overflow-y-auto">
-                <div class="space-y-5 text-sm leading-relaxed text-white/82">
-                  <div>
-                    <p class="tech-label tech-label--skills font-medium">Current Skills</p>
-                    <p>React, TypeScript, Astro, Tailwind CSS, Supabase, Vercel, Python, JavaScript, PLpgSQL, SQL, HTML.</p>
-                  </div>
-                  <div>
-                    <p class="tech-label tech-label--ai font-medium">AI</p>
-                    <p>Cloud and Local LLMs.</p>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-        </section>
-      </div>
+  <div class="stage-box stage2 absolute inset-0 grid place-items-stretch md:place-items-center opacity-0 pointer-events-none transition-opacity duration-300 ease-out">
+    <div class="two-col w-[92vw] max-w-[1200px] h-full md:h-[60vh] box-border overflow-hidden mx-auto flex flex-col md:grid md:grid-cols-2 gap-2 md:gap-6 pt-8 md:pt-0 pb-3 md:pb-0">
+      <Stage2Identity />
+      <Stage2Panel />
     </div>
   </div>
 
@@ -148,96 +35,3 @@ import BlueprintBg from './BlueprintBg.astro';
   initFluidName()
 </script>
 </div>
-
-<style>
-  .layout-tab {
-    height: 1.9rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.02em;
-    color: rgba(255, 255, 255, 0.75);
-    border-bottom: 2px solid transparent;
-    transition: color 180ms ease, border-color 180ms ease;
-  }
-
-  .layout-tab:hover {
-    color: rgba(255, 255, 255, 0.95);
-    border-bottom-color: rgba(255, 255, 255, 0.32);
-  }
-
-  .layout-tab.is-active {
-    color: rgba(165, 236, 255, 0.98);
-    border-bottom-color: rgba(132, 228, 255, 0.95);
-  }
-
-  .h-strip {
-    border-top: 1px solid rgba(255, 255, 255, 0.16);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.02);
-  }
-
-  .step-dot {
-    width: 2rem;
-    height: 2rem;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    background: rgba(255, 255, 255, 0.04);
-    display: grid;
-    place-items: center;
-    font-size: 0.7rem;
-    color: rgba(255, 255, 255, 0.86);
-  }
-
-  .node-card {
-    border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-    background: transparent;
-    color: rgba(255, 255, 255, 0.78);
-    font-size: 0.74rem;
-    transition: border-color 160ms ease, color 160ms ease;
-  }
-
-  .node-card:hover {
-    border-bottom-color: rgba(132, 228, 255, 0.68);
-    color: rgba(255, 255, 255, 0.95);
-  }
-
-  .node-card--active {
-    border-bottom-color: rgba(132, 228, 255, 0.98);
-    color: rgba(226, 248, 255, 0.98);
-  }
-
-  .about-copy p {
-    text-align: justify;
-    text-justify: inter-word;
-  }
-
-  .projects-copy p {
-    text-align: justify;
-    text-justify: inter-word;
-  }
-
-  .project-link-accent {
-    color: rgba(165, 236, 255, 0.98);
-    text-decoration-line: underline;
-    text-underline-offset: 0.25rem;
-    text-decoration-color: rgba(132, 228, 255, 0.55);
-    transition: color 160ms ease, text-decoration-color 160ms ease;
-  }
-
-  .project-link-accent:hover {
-    color: rgba(210, 246, 255, 1);
-    text-decoration-color: rgba(132, 228, 255, 0.95);
-  }
-
-  .tech-label {
-    letter-spacing: 0.02em;
-    margin-bottom: 0.2rem;
-  }
-
-  .tech-label--skills {
-    color: rgba(145, 236, 255, 0.95);
-  }
-
-  .tech-label--ai {
-    color: rgba(170, 245, 184, 0.95);
-  }
-</style>

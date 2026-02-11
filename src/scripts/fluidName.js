@@ -7,7 +7,7 @@ export function initFluidName() {
     const stage1NameText = shell.querySelector('.stage1 .hero-text');
     const stage2LeftCol = shell.querySelector('.stage2 .left-col');
     const stage2RightCol = shell.querySelector('.stage2 .right-col');
-    const tijuanaTimeEl = shell.querySelector('#tijuana-time');
+    const tijuanaTimeEls = Array.from(shell.querySelectorAll('[data-tijuana-time]'));
     const layoutTabs = Array.from(shell.querySelectorAll('[data-layout-target]'));
     const layoutPanes = Array.from(shell.querySelectorAll('[data-layout-pane]'));
     const projectTabs = Array.from(shell.querySelectorAll('[data-project-target]'));
@@ -18,7 +18,12 @@ export function initFluidName() {
 
     function setLayoutPane(id) {
       layoutPanes.forEach((pane) => {
-        pane.hidden = pane.dataset.layoutPane !== id;
+        const isActive = pane.dataset.layoutPane === id;
+        pane.hidden = !isActive;
+        if (isActive) {
+          const scrollHost = pane.querySelector('.overflow-y-auto');
+          if (scrollHost) scrollHost.scrollTop = 0;
+        }
       });
 
       layoutTabs.forEach((tab) => {
@@ -90,7 +95,7 @@ export function initFluidName() {
     }
 
     function updateTijuanaTime() {
-      if (!tijuanaTimeEl) return;
+      if (!tijuanaTimeEls.length) return;
       const now = new Date();
 
       const localOffset = -now.getTimezoneOffset();
@@ -104,7 +109,10 @@ export function initFluidName() {
         hour12: false
       }).format(now);
 
-      tijuanaTimeEl.textContent = `${timeLabel} · ${formatOffsetLabel(diffMinutes)}`;
+      const label = `${timeLabel} · ${formatOffsetLabel(diffMinutes)}`;
+      tijuanaTimeEls.forEach((el) => {
+        el.textContent = label;
+      });
     }
 
     updateTijuanaTime();
